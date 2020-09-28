@@ -1,16 +1,23 @@
 <template>
     <div>
-        <table id="simple-table" class="table  table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>名称</th>
-                <th>课程ID</th>
-                <th>操作</th>
-            </tr>
-            </thead>
+        <p>
+            <button class="btn btn-white btn-default btn-round" v-on:click="list">
+                <i class="ace-icon fa fa-refresh red2"></i>
+                刷新
+            </button>
+        </p>
+        <div>
+            <table id="simple-table" class="table  table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>课程ID</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
 
-            <tbody>
+                <tbody>
                 <tr v-for="chapter in chapters">
                     <td>{{chapter.id}}</td>
                     <td>{{chapter.name}}</td>
@@ -29,9 +36,11 @@
                         </div>
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </div><!-- /.span -->
+                </tbody>
+            </table>
+        </div><!-- /.span -->
+    </div>
+
 </template>
 
 <script>
