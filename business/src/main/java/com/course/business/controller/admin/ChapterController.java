@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@RequestMapping("/chapter")
 public class ChapterController {
     @Autowired
     private ChapterService chapterService;
-    @RequestMapping("/chapter")
+    @RequestMapping("/list")
     public List<ChapterDto> chapter(){
         List<ChapterDto> list = chapterService.list();
         return list;
