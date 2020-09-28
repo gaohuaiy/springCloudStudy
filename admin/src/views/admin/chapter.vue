@@ -52,9 +52,12 @@
             //列表
             list:function () {
                 let _this = this;
-                _this.$axios.get("http://127.0.0.1:9000/business/chapter/list").then((res)=>{
+                _this.$axios.post("http://127.0.0.1:9000/business/chapter/list",{
+                    page:1,
+                    size:1
+                }).then((res)=>{
                     console.log('大章列表：'+res)
-                    _this.chapters = res.data;
+                    _this.chapters = res.data.list;
                 })
             }
         }
