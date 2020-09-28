@@ -1,5 +1,5 @@
 package com.course.server.config;//package com.course.server.config;
-
+/*
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -18,4 +18,4 @@ public class CorsConfig implements WebMvcConfigurer {
                 .maxAge(3600); // 1小时内不需要再预检（发OPTIONS请求）
     }
 
-}
+}*/
