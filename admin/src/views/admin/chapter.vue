@@ -1,11 +1,12 @@
 <template>
     <div>
         <p>
-            <button class="btn btn-white btn-default btn-round" v-on:click="list">
-                <i class="ace-icon fa fa-refresh red2"></i>
+            <button class="btn btn-white btn-default btn-round" v-on:click="list(1)">
+                <i class="ace-icon fa fa-refresh"></i>
                 刷新
             </button>
         </p>
+        <pagination ref="pagination" v-bind:list="list"></pagination>
         <div>
             <table id="simple-table" class="table  table-bordered table-hover">
                 <thead>
@@ -44,8 +45,11 @@
 </template>
 
 <script>
+    import Pagination from "../../components/pagination";
     export default {
         name: "chapter",
+        components: {Pagination},
+        comments:{Pagination},
         data:function(){
             return {
                 chapters:[]
@@ -59,14 +63,16 @@
         },
         methods: {
             //列表
-            list:function () {
+            list:function (page) {
                 let _this = this;
+
                 _this.$axios.post("http://127.0.0.1:9000/business/chapter/list",{
-                    page:1,
-                    size:1
+                    page:page,
+                    size:_this.$refs.pagination.size
                 }).then((res)=>{
-                    console.log('大章列表：'+res)
+                    console.log('大章列表：',res.data.list)
                     _this.chapters = res.data.list;
+                    _this.$refs.pagination.render(page,res.data.total)
                 })
             }
         }
