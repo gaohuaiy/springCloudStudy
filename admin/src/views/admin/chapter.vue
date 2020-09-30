@@ -33,10 +33,10 @@
                             <button class="btn btn-white btn-xs btn-info btn-round">
                                 小节
                             </button>&nbsp;
-                            <button  class="btn btn-white btn-xs btn-info btn-round">
+                            <button class="btn btn-white btn-xs btn-info btn-round" v-on:click="edit(chapter)">
                                 编辑
                             </button>&nbsp;
-                            <button  class="btn btn-white btn-xs btn-warning btn-round">
+                            <button class="btn btn-white btn-xs btn-warning btn-round" v-on:click="del(chapter)">
                                 删除
                             </button>
                         </div>
@@ -57,13 +57,14 @@
                                 <div class="form-group">
                                     <label for="name" class="col-sm-2 control-label">名称</label>
                                     <div class="col-sm-10">
-                                        <input  id = "name" v-model="chapter.name" class="form-control" placeholder="名称">
+                                        <input id="name" v-model="chapter.name" class="form-control" placeholder="名称">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="courseId" class="col-sm-2 control-label">课程id</label>
                                     <div class="col-sm-10">
-                                        <input id="courseId" v-model="chapter.courseId" class="form-control" placeholder="课程id">
+                                        <input id="courseId" v-model="chapter.courseId" class="form-control"
+                                               placeholder="课程id">
                                     </div>
                                 </div>
                             </form>
@@ -86,14 +87,15 @@
 
 <script>
     import Pagination from "../../components/pagination";
+
     export default {
         name: "chapter",
         components: {Pagination},
-        comments:{Pagination},
-        data:function(){
+        comments: {Pagination},
+        data: function () {
             return {
-                chapters:[],
-                chapter:{}
+                chapters: [],
+                chapter: {}
             }
         },
         mounted: function () {
@@ -104,31 +106,73 @@
         },
         methods: {
             //列表
-            list:function (page) {
+            list: function (page) {
                 let _this = this;
 
-                _this.$axios.post("http://127.0.0.1:9000/business/chapter/list",{
-                    page:page,
-                    size:_this.$refs.pagination.size
-                }).then((res)=>{
-                    console.log('大章列表：',res.data.list)
-                    _this.chapters = res.data.list;
-                    _this.$refs.pagination.render(page,res.data.total)
+                _this.$axios.post("http://127.0.0.1:9000/business/chapter/list", {
+                    page: page,
+                    size: _this.$refs.pagination.size
+                }).then((response) => {
+                    let resp = response.data;
+                    console.log('大章列表：', resp.content.list)
+                    _this.chapters = resp.content.list;
+                    _this.$refs.pagination.render(page, resp.content.total)
                 })
             },
             //add
-            add:function () {
+            add: function () {
                 let _this = this;
-                $(".modal").modal("show");
+                _this.chapter = {};
+                $("#myModal").modal("show");
+            },
+            edit: function (chapter) {
+                let _this = this;
+                _this.chapter = $.extend({}, chapter);
+                $("#myModal").modal("show");
             },
             //save
-            save:function (data) {
+            save: function (data) {
                 let _this = this;
-                _this.$axios.post("http://127.0.0.1:9000/business/chapter/save",_this.chapter).then(
-                    (res)=>{
-
+                _this.$axios.post("http://127.0.0.1:9000/business/chapter/save", _this.chapter).then(
+                    (response) => {
+                        let resp = response.data;
+                        if (resp.success) {
+                            $("#myModal").modal("hide");
+                            _this.list(1);
+                        }
                     }
                 )
+            },
+            del:function (chapter) {
+                let _this = this;
+
+                Swal.fire({
+                    title: '确定删除?',
+                    text: "删除后不可恢复，确认删除!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '是，删除它!'
+                }).then((result) => {
+                    if (result.value) {
+
+                            _this.$axios.post("http://127.0.0.1:9000/business/chapter/delete",chapter).then(
+                                (response) => {
+                                    let resp = response.data;
+                                    if (resp.success) {
+                                        _this.list(1);
+                                    }
+                                }
+                            )
+                        Swal.fire(
+                            '已删除！',
+                            '该条数据已删除',
+                            '成功'
+                        )
+                    }
+                })
+
             }
         }
     }
