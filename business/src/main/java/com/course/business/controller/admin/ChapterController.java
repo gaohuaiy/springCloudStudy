@@ -22,8 +22,14 @@ public class ChapterController {
     * @requstBody 是流方式
     * */
     @PostMapping("/list")
-    public PageDto chapter(@RequestBody PageDto pageDto){
+    public PageDto list(@RequestBody PageDto pageDto){
         chapterService.list(pageDto);
         return pageDto;
+    }
+
+    @PostMapping("/save")
+    public ChapterDto save(@RequestBody ChapterDto chapterDto){
+        chapterService.save(chapterDto);
+        return chapterDto;
     }
 }
