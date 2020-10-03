@@ -133,6 +133,14 @@
             //save
             save: function (data) {
                 let _this = this;
+                //保存校验
+                if (!Validator.require(_this.chapter.name,"名称")
+                    || !Validator.require(_this.chapter.courseId,"课程Id")
+                    ||!Validator.length(_this.chapter.courseId,"课程Id",1,8)
+                ){
+                    return;
+                }
+                Loading.show();
                 _this.$axios.post("http://127.0.0.1:9000/business/chapter/save", _this.chapter).then(
                     (response) => {
                         let resp = response.data;
@@ -142,6 +150,7 @@
                         }
                     }
                 )
+                Loading.hide();
             },
             del:function (chapter) {
                 let _this = this;

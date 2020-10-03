@@ -1,4 +1,3 @@
-/*
 package com.course.server.util;
 
 import com.course.server.exception.ValidatorException;
@@ -6,10 +5,9 @@ import org.springframework.util.StringUtils;
 
 public class ValidatorUtil {
 
-    */
-/**
-     * 空校验（null or ""）
-     *//*
+
+      /*空校验（null or ""）*/
+
 
     public static void require(Object str, String fieldName) {
         if (StringUtils.isEmpty(str)) {
@@ -17,10 +15,9 @@ public class ValidatorUtil {
         }
     }
 
-    */
 /**
-     * 长度校验
-     *//*
+     * 长度校验*/
+
 
     public static void length(String str, String fieldName, int min, int max) {
         if (StringUtils.isEmpty(str)) {
@@ -35,4 +32,3 @@ public class ValidatorUtil {
         }
     }
 }
-*/
