@@ -143,14 +143,17 @@
                 Loading.show();
                 _this.$axios.post("http://127.0.0.1:9000/business/chapter/save", _this.chapter).then(
                     (response) => {
+                        Loading.hide();
                         let resp = response.data;
                         if (resp.success) {
                             $("#myModal").modal("hide");
                             _this.list(1);
+                            Toast.success("保存成功！！")
+                        }else {
+                            Toast.warning(resp.massage);
                         }
                     }
                 )
-                Loading.hide();
             },
             del:function (chapter) {
                 let _this = this;

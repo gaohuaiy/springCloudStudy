@@ -47,7 +47,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.21</version>
+                <version>5.1.37</version>
             </dependency>
             <dependency>
                 <groupId>com.mooc</groupId>
@@ -59,6 +59,17 @@
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>1.2.7</version>
+            </dependency>
+            <!--AOP-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>2.3.4.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.60</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
