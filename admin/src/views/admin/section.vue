@@ -1,5 +1,12 @@
 <template>
   <div>
+    <h4 class="lighter">
+      <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+      <router-link to="/business/course" href="#modal-wizard" data-toggle="modal" class="pink">{{course.name}}</router-link>
+      &nbsp;
+      <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+      <router-link to="/business/course" href="#modal-wizard" data-toggle="modal" class="pink">{{chapter.name}}</router-link>
+    </h4>
     <p>
       <button v-on:click="add()" class="btn btn-white btn-default btn-round">
         <i class="ace-icon fa fa-edit"></i>
@@ -33,8 +40,8 @@
       <tr v-for="section in sections">
         <td>{{section.id}}</td>
         <td>{{section.title}}</td>
-        <td>{{section.courseId}}</td>
-        <td>{{section.chapterId}}</td>
+        <td>{{course.name}}</td>
+        <td>{{chapter.name}}</td>
         <td>{{section.video}}</td>
         <td>{{section.time}}</td>
         <td>{{SECTION_CHARGE | optionKV(section.charge)}}</td>
@@ -71,13 +78,13 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">课程</label>
                 <div class="col-sm-10">
-                  <input v-model="section.courseId" class="form-control">
+                  <p class="form-control-static">{{course.name}}</p>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label">大章</label>
                 <div class="col-sm-10">
-                  <input v-model="section.chapterId" class="form-control">
+                  <p class="form-control-static">{{chapter.name}}</p>
                 </div>
               </div>
               <div class="form-group">
@@ -120,6 +127,7 @@
 
 <script>
   import Pagination from "../../components/pagination";
+  import course from "./course";
   export default {
     components: {Pagination},
     name: "business-section",
@@ -128,11 +136,20 @@
         section: {},
         sections: [],
         SECTION_CHARGE: SECTION_CHARGE,
+        chapter:{},
+        course:{}
       }
     },
     mounted: function() {
       let _this = this;
       _this.$refs.pagination.size = 5;
+      let chapter = SessionStorage.get("chapter") ||{};
+      let course= SessionStorage.get("course") ||{};
+      if (Tool.isEmpty(chapter)||Tool.isEmpty(course)){
+        _this.$router.push("/welcome");
+      }
+      _this.chapter = chapter;
+      _this.course = course;
       _this.list(1);
       // sidebar激活样式方法一
       // this.$parent.activeSidebar("business-section-sidebar");
@@ -166,6 +183,8 @@
         _this.$axios.post(process.env.VUE_APP_SERVER + '/business/admin/section/list', {
           page: page,
           size: _this.$refs.pagination.size,
+          courseId:_this.course.id,
+          chapterId:_this.chapter.id
         }).then((response)=>{
           Loading.hide();
           let resp = response.data;
@@ -189,7 +208,8 @@
         ) {
           return;
         }
-
+        _this.section.courseId = _this.course.id;
+        _this.section.chapterId = _this.chapter.id;
         Loading.show();
         _this.$axios.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', _this.section).then((response)=>{
           Loading.hide();

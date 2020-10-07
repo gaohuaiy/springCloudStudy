@@ -1,6 +1,7 @@
 package com.course.business.controller.admin;
 
 import com.course.server.dto.ChapterDto;
+import com.course.server.dto.ChapterPageDto;
 import com.course.server.dto.PageDto;
 import com.course.server.dto.ResponseDto;
 import com.course.server.exception.ValidatorException;
@@ -25,15 +26,20 @@ public class ChapterController {
     * @requstBody 是流方式
     * */
     @PostMapping("/list")
-    public ResponseDto list(@RequestBody PageDto pageDto){
+    public ResponseDto list(@RequestBody ChapterPageDto chapterPageDto){
         ResponseDto responseDto = new ResponseDto();
-        chapterService.list(pageDto);
-        responseDto.setContent(pageDto);
+        ValidatorUtil.require(chapterPageDto.getCourseId(),"课程ID");
+        chapterService.list(chapterPageDto);
+        responseDto.setContent(chapterPageDto);
         return responseDto;
     }
 
     @PostMapping("/save")
     public ResponseDto save(@RequestBody ChapterDto chapterDto){
+        //保存校验
+        ValidatorUtil.require(chapterDto.getName(),"名称");
+        ValidatorUtil.require(chapterDto.getCourseId(),"课程ID");
+        ValidatorUtil.length(chapterDto.getCourseId(),"课程ID",1,8);
         ResponseDto responseDto = new ResponseDto<>();
         chapterService.save(chapterDto);
         responseDto.setContent(chapterDto);

@@ -8,10 +8,10 @@ import java.util.List;
  * @date 2020/9/28 15:10
  */
 public class PageDto<T> {
-    private int page;
-    private int size;
-    private long total;
-    private List<T> list;
+    protected int page;
+    protected int size;
+    protected long total;
+    protected List<T> list;
 
     public int getPage() {
         return page;
@@ -43,5 +43,16 @@ public class PageDto<T> {
 
     public void setList(List<T> list) {
         this.list = list;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PageDto{");
+        sb.append("page=").append(page);
+        sb.append(", size=").append(size);
+        sb.append(", total=").append(total);
+        sb.append(", list=").append(list);
+        sb.append('}');
+        return sb.toString();
     }
 }

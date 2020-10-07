@@ -1,6 +1,10 @@
 <template>
     <div>
-        <h3>{{course.name}}</h3>
+        <h4 class="lighter">
+            <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+            <router-link to="/business/course" href="#modal-wizard" data-toggle="modal" class="pink">{{course.name}}</router-link>
+        </h4>
+        <hr>
         <p>
             <router-link class="btn btn-white btn-default btn-round" to="/business/course">
                 <i class="ace-icon fa fa-arrow-left"></i>
@@ -23,7 +27,6 @@
                 <tr>
                     <th>ID</th>
                     <th>名称</th>
-                    <th>课程ID</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -32,10 +35,9 @@
                 <tr v-for="chapter in chapters">
                     <td>{{chapter.id}}</td>
                     <td>{{chapter.name}}</td>
-                    <td>{{chapter.courseId}}</td>
                     <td>
                         <div class="hidden-sm hidden-xs btn-group">
-                            <button class="btn btn-white btn-xs btn-info btn-round">
+                            <button class="btn btn-white btn-xs btn-info btn-round" v-on:click="toSection(chapter)">
                                 小节
                             </button>&nbsp;
                             <button class="btn btn-white btn-xs btn-info btn-round" v-on:click="edit(chapter)">
@@ -66,10 +68,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="courseId" class="col-sm-2 control-label">课程id</label>
+                                    <label  class="col-sm-2 control-label">课程</label>
                                     <div class="col-sm-10">
-                                        <input id="courseId" v-model="chapter.courseId" class="form-control"
-                                               placeholder="课程id">
+                                       <p class="form-control-static">{{course.name}}</p>
                                     </div>
                                 </div>
                             </form>
@@ -121,10 +122,12 @@
             //列表
             list: function (page) {
                 let _this = this;
+                console.log(_this.course)
 
                 _this.$axios.post("http://127.0.0.1:9000/business/chapter/list", {
                     page: page,
-                    size: _this.$refs.pagination.size
+                    size: _this.$refs.pagination.size,
+                    courseId: _this.course.id
                 }).then((response) => {
                     let resp = response.data;
                     console.log('大章列表：', resp.content.list)
@@ -143,16 +146,21 @@
                 _this.chapter = $.extend({}, chapter);
                 $("#myModal").modal("show");
             },
+            toSection:function (chapter) {
+                let _this = this;
+                SessionStorage.set("chapter",chapter);
+                _this.$router.push("/business/section");
+            },
             //save
             save: function (data) {
                 let _this = this;
+
                 //保存校验
                 if (!Validator.require(_this.chapter.name,"名称")
-                    || !Validator.require(_this.chapter.courseId,"课程Id")
-                    ||!Validator.length(_this.chapter.courseId,"课程Id",1,8)
                 ){
                     return;
                 }
+                _this.chapter.courseId = _this.course.id;
                 Loading.show();
                 _this.$axios.post("http://127.0.0.1:9000/business/chapter/save", _this.chapter).then(
                     (response) => {
@@ -167,6 +175,7 @@
                         }
                     }
                 )
+                Loading.hide();
             },
             del:function (chapter) {
                 let _this = this;
