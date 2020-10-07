@@ -212,7 +212,10 @@
                     }
 
                   }
-
+            //对当前一级分类选中的表格触发一次点击时间
+                  setTimeout(function () {
+                    $("tr.active").trigger("click");
+                  },100)
         })
       },
 
