@@ -46,6 +46,9 @@
               <button v-on:click="editContent(course)" class="btn btn-xs btn-info">
                 内容
               </button>
+              <button v-on:click="openSortModal(course)" class="btn btn-xs btn-info">
+                排序
+              </button>
               <button v-on:click="edit(course)" class="btn btn-xs btn-info">
                 编辑
               </button>
@@ -134,9 +137,9 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">顺序</label>
+                <label class="col-sm-2 control-label" disabled>顺序</label>
                 <div class="col-sm-10">
-                  <input v-model="course.sort" class="form-control">
+                  <input v-model="course.sort" class="form-control" disabled>
                 </div>
               </div>
               <div class="form-group">
@@ -183,6 +186,33 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div>
+
+    <div id="course-sort-model" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">内容编辑</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-lg-3">当前排序</label>
+                <input class="form-control-static" v-model="sort.oldSort" name="oldSort">
+              </div>
+              <div class="form-group">
+                <label class="control-label col-lg-3">新排序</label>
+                <input class="form-control" v-model="sort.newSort" name="newSort">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button v-on:click="saveContent()" type="button" class="btn btn-primary">保存</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
   </div>
 </template>
 
@@ -200,7 +230,12 @@
         COURSE_STATUS: COURSE_STATUS,
         categorys:[],
         tree:{},
-        saveContentLabel:""
+        saveContentLabel:"",
+        sort:{
+          id:"",
+          oldSort: 0,
+          newSort: 0,
+        }
       }
     },
     mounted: function() {
@@ -218,7 +253,9 @@
        */
       add() {
         let _this = this;
-        _this.course = {};
+        _this.course = {
+          sort: _this.$refs.pagination.total + 1;
+        };
         _this.tree.checkAllNodes(false);
         $("#form-modal").modal("show");
       },
@@ -429,6 +466,24 @@
                 })
 
       },
+      openSortModal(course){
+        let _this = this;
+        _this.sort = {
+          id : course.id,
+          oldSort: course.sort,
+          newSort: course.sort
+        };
+        $("#course-sort-model").modal("show");
+      },
+      updateSort(){
+        let _this = this;
+        if (_this.sort.newSort == _this.sort.oldSort){
+          Toast.warning("排序没有变化");
+          return;
+        }
+        Loading.show();
+        
+      }
     }
   }
 </script>
