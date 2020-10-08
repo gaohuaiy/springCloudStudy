@@ -28,6 +28,8 @@ public class CourseService {
     private CourseMapper courseMapper;
     @Resource
     private MyCourseMapper myCourseMapper;
+    @Resource
+    private CourseCategoryService courseCategoryService;
 
     /**
      * 列表查询
@@ -53,6 +55,8 @@ public class CourseService {
         } else {
             this.update(course);
         }
+        //保存分类信息
+        courseCategoryService.saveBatch(courseDto.getId(),courseDto.getCategory());
     }
 
     /**
