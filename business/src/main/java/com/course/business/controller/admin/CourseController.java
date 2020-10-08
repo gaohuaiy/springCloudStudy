@@ -1,6 +1,7 @@
 package com.course.business.controller.admin;
 
 import com.course.server.domain.CourseCategory;
+import com.course.server.dto.CourseContentDto;
 import com.course.server.dto.CourseDto;
 import com.course.server.dto.PageDto;
 import com.course.server.dto.ResponseDto;
@@ -77,4 +78,28 @@ public class CourseController {
         responseDto.setContent(courseCategoryList);
         return responseDto;
     }
+
+    /**
+     * 查询课程内容
+     * @param id
+     * @return
+     */
+    @GetMapping("/find-content/{id}")
+    public ResponseDto findContend(@PathVariable(value = "id") String id){
+        ResponseDto responseDto = new ResponseDto();
+        CourseContentDto conent = courseService.findConent(id);
+        responseDto.setContent(conent);
+        return responseDto;
+    }
+
+    @PostMapping("/save-content")
+    public ResponseDto saveContend(@RequestBody CourseContentDto courseContentDto) {
+
+        ResponseDto responseDto = new ResponseDto();
+        courseService.saveContent(courseContentDto);
+        responseDto.setContent(courseContentDto);
+        return responseDto;
+    }
+
+
 }
