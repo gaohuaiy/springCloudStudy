@@ -75,15 +75,15 @@ public class CourseDto {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updatedAt;
 
-    public List<CategoryDto> getCategory() {
-        return category;
+    public List<CategoryDto> getCategorys() {
+        return categorys;
     }
 
-    public void setCategory(List<CategoryDto> category) {
-        this.category = category;
+    public void setCategorys(List<CategoryDto> categorys) {
+        this.categorys = categorys;
     }
 
-    private List<CategoryDto> category;
+    private List<CategoryDto> categorys;
     /**
      * 讲师|teacher.id
      */
@@ -218,7 +218,7 @@ public class CourseDto {
         sb.append(", sort=").append(sort);
         sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);
-        sb.append(", category=").append(category);
+        sb.append(", category=").append(categorys);
         sb.append(", teacherId='").append(teacherId).append('\'');
         sb.append('}');
         return sb.toString();
