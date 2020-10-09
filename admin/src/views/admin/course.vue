@@ -198,17 +198,21 @@
             <form class="form-horizontal">
               <div class="form-group">
                 <label class="control-label col-lg-3">当前排序</label>
-                <input class="form-control-static" v-model="sort.oldSort" name="oldSort">
+                <div class="col-lg-9">
+                  <input class="form-control" disabled v-model="sort.oldSort" name="oldSort" >
+                </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-lg-3">新排序</label>
-                <input class="form-control" v-model="sort.newSort" name="newSort">
+                <div class="col-lg-9">
+                  <input class="form-control " v-model="sort.newSort" name="newSort">
+                </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button v-on:click="saveContent()" type="button" class="btn btn-primary">保存</button>
+            <button v-on:click="updateSort()" type="button" class="btn btn-primary">保存</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -254,7 +258,7 @@
       add() {
         let _this = this;
         _this.course = {
-          sort: _this.$refs.pagination.total + 1;
+          sort: _this.$refs.pagination.total + 1
         };
         _this.tree.checkAllNodes(false);
         $("#form-modal").modal("show");
@@ -264,7 +268,7 @@
        */
       toChapter(course) {
         let _this = this;
-        SessionStorage.set("course",course);
+        SessionStorage.set(SESSION_KEY_COURSE,course);
         _this.$router.push("/business/chapter");
       }
       ,
@@ -450,7 +454,8 @@
         _this.$axios.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content',{
           id: _this.course.id,
           content: content
-        } ).then((response)=>{
+        } ).then(
+                (response)=>{
                   Loading.hide();
                   let resp = response.data;
                   if (resp.success){
@@ -482,6 +487,20 @@
           return;
         }
         Loading.show();
+        _this.$axios.post(process.env.VUE_APP_SERVER + '/business/admin/course/sort',_this.sort).then(
+                (response)=>{
+                  Loading.hide();
+                  let resp = response.data;
+                  if (resp.success){
+                    $("#course-sort-model").modal("hide");
+                    _this.list(1);
+                    Toast.success("更新排序成功！");
+
+                  }else {
+                    Toast.warning("更新排序失败！");
+                  }
+
+                })
         
       }
     }

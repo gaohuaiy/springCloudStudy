@@ -1,10 +1,7 @@
 package com.course.business.controller.admin;
 
 import com.course.server.domain.CourseCategory;
-import com.course.server.dto.CourseContentDto;
-import com.course.server.dto.CourseDto;
-import com.course.server.dto.PageDto;
-import com.course.server.dto.ResponseDto;
+import com.course.server.dto.*;
 import com.course.server.service.CourseCategoryService;
 import com.course.server.service.CourseService;
 import com.course.server.util.ValidatorUtil;
@@ -98,6 +95,13 @@ public class CourseController {
         ResponseDto responseDto = new ResponseDto();
         courseService.saveContent(courseContentDto);
         responseDto.setContent(courseContentDto);
+        return responseDto;
+    }
+    @PostMapping("/sort")
+    public ResponseDto saveContend(@RequestBody SortDto sortDto) {
+        LOG.info("更新排序");
+        ResponseDto responseDto = new ResponseDto();
+        courseService.sort(sortDto);
         return responseDto;
     }
 
