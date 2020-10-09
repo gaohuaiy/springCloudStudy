@@ -20,7 +20,7 @@ public class BusinessApplication {
         SpringApplication springApplication = new SpringApplication(BusinessApplication.class);
         ConfigurableEnvironment environment = springApplication.run(args).getEnvironment();
         Log.info("启动成功！");
-        Log.info("system 项目地址：\t http://127.0.0.1:{} ",environment.getProperty("server.port"));
+        Log.info("business 项目地址：\t http://127.0.0.1:{} ",environment.getProperty("server.port"));
     }
 
 }
