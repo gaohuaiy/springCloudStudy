@@ -170,8 +170,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">头像</label>
-                                <div class="col-sm-10">
-                                    <input v-model="teacher.image" class="form-control">
+                                <div class="col-sm-10" >
+                                    <input type="file" id="file-upload-input"  v-on:change="uplodImage()">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -310,6 +310,19 @@
                         }
                     })
                 });
+            },
+            /**
+             *
+             */
+            uplodImage(){
+                let _this = this;
+                let formData = new window.FormData();
+                formData.append('file',document.querySelector("#file-upload-input").files[0]);
+                Loading.show();
+                _this.$axios.post(process.env.VUE_APP_SERVER + '/file/admin/upload',formData).then((response)=>{
+                    Loading.hide();
+                    let resp = response.data;
+                })
             }
         }
     }
