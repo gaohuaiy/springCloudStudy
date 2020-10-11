@@ -8,14 +8,13 @@ import com.course.server.util.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -48,7 +47,7 @@ public class UploadController {
         if (!fullDir.exists()){
             fullDir.mkdirs();
         }
-        String path = dir+File.separator + key + "." + filename;
+        String path = dir+File.separator + key + "." + suffix;
         String fullPath = FILE_PATH+path;
         File dest = new File(fullPath);
         file.transferTo(dest);
@@ -68,5 +67,25 @@ public class UploadController {
         responseDto.setContent(fileDto);
         return responseDto;
     }
+
+    @GetMapping("/merge")
+    public ResponseDto merge() throws Exception{
+        File newFile = new File(FILE_PATH+"/课程/test1234.mp4");
+        FileOutputStream fileOutputStream = new FileOutputStream(newFile, true);//文件追加写入
+        FileInputStream fileInputStream = null;//分片文件
+        byte[] byt = new byte[10*1024*1024];
+        int len;
+
+        fileInputStream = new FileInputStream(FILE_PATH+"/课程/UdU8bxdd.blob");//读取第一个分片
+        while ((len = fileInputStream.read(byt))!=-1){
+            fileOutputStream.write(byt,0,len);
+        }
+        fileInputStream = new FileInputStream(FILE_PATH+"/课程/qF7nYSki.blob");//读取第二个分片
+        while ((len = fileInputStream.read(byt))!=-1){
+            fileOutputStream.write(byt,0,len);
+        }
+        return new ResponseDto();
+    }
+
 
 }
