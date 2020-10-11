@@ -73,7 +73,9 @@
           let fileShard = file.slice(start,end);//从文件中截取当前的分片数据
           let size = file.size;
           let shardTotal = Math.ceil(size/shardSize);
-
+          let key = hex_md5(file);
+          let key10 = parseInt(key);
+          let key62 = Tool._10to62(key10)//节约空姐
           formData.append('shard',fileShard);
           formData.append('shardIndex',shardIndex);
           formData.append('shardSize',shardSize);
@@ -82,6 +84,7 @@
           formData.append('suffix',suffix);
           formData.append('name',file.name);
           formData.append('size',size);
+          formData.append('key',key62);
           Loading.show();
           _this.$axios.post(process.env.VUE_APP_SERVER + '/file/admin/upload',formData).then((response)=>{
               Loading.hide();

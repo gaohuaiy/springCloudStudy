@@ -38,12 +38,12 @@ public class UploadController {
                               Integer size   ,
                               String use    ,
                               String suffix   ,
+                              String key   ,
                               String name) throws IOException {
 
         LOG.info("文件上传开始：");
         //保存文件到本地
         FileUseEnum useEnum = FileUseEnum.getByCode(use);
-        String key = UuidUtil.getShortUuid();
 
         //如果文件夹不存在，创建
         String dir = useEnum.getDesc().toLowerCase();
