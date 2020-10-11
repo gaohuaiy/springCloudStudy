@@ -164,7 +164,7 @@
       delFile(f){
         let _this = this;
         Confirm.show("删除后不可恢复，确认删除？",function () {
-          _this.$axios.post(process.env.VUE_APP_SERVER + '/business/admin/course-content-file/delete/'+f.id, )
+          _this.$axios.delete(process.env.VUE_APP_SERVER + '/business/admin/course-content-file/delete/'+f.id, )
                   .then((response)=>{
                     let resp = response.data;
                     if (resp.success){

@@ -31,15 +31,19 @@ public class UploadController {
     private FileService fileService;
 
     @PostMapping("/upload")
-    public ResponseDto upload(@RequestParam MultipartFile file,String use) throws IOException {
-        LOG.info("文件上传开始：{}",file);
-        LOG.info(file.getOriginalFilename());
-        LOG.info(String.valueOf(file.getSize()));
+    public ResponseDto upload(@RequestParam MultipartFile shard,
+                              Integer shardIndex,
+                              Integer shardSize,
+                              Integer shardTotal,
+                              Integer size   ,
+                              String use    ,
+                              String suffix   ,
+                              String name) throws IOException {
+
+        LOG.info("文件上传开始：");
         //保存文件到本地
         FileUseEnum useEnum = FileUseEnum.getByCode(use);
         String key = UuidUtil.getShortUuid();
-        String filename = file.getOriginalFilename();
-        String suffix = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
 
         //如果文件夹不存在，创建
         String dir = useEnum.getDesc().toLowerCase();
@@ -50,16 +54,20 @@ public class UploadController {
         String path = dir+File.separator + key + "." + suffix;
         String fullPath = FILE_PATH+path;
         File dest = new File(fullPath);
-        file.transferTo(dest);
+        shard.transferTo(dest);
         LOG.info(dest.getAbsolutePath());
 
         LOG.info("保存文件记录开始");
         FileDto fileDto = new FileDto();
         fileDto.setPath(path);
-        fileDto.setName(filename);
-        fileDto.setSize(Math.toIntExact(file.getSize()));
+        fileDto.setName(name);
+        fileDto.setSize(size);
         fileDto.setSuffix(suffix);
         fileDto.setUse(useEnum.getCode());
+        fileDto.setShardIndex(shardIndex);
+        fileDto.setShardSize(shardSize);
+        fileDto.setShardTotal(shardTotal);
+        fileDto.setKey(key);
         fileService.save(fileDto);
 
         ResponseDto responseDto = new ResponseDto();
