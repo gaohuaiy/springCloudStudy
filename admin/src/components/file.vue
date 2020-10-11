@@ -18,6 +18,9 @@
           inputId:{
               default: 'file-upload'
           },
+          use:{
+              default:""
+          },
           suffixs:{
               default:['jpg','png','jpeg']
           },
@@ -62,6 +65,7 @@
               return;
           }
           formData.append('file',file);
+          formData.append('use',_this.use);
           Loading.show();
           _this.$axios.post(process.env.VUE_APP_SERVER + '/file/admin/upload',formData).then((response)=>{
               Loading.hide();
