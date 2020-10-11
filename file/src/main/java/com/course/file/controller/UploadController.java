@@ -1,6 +1,8 @@
 package com.course.file.controller;
 
+import com.course.server.dto.FileDto;
 import com.course.server.dto.ResponseDto;
+import com.course.server.service.FileService;
 import com.course.server.util.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 
@@ -24,6 +27,8 @@ public class UploadController {
     private String FILE_PATH;
     @Value("${file.domain}")
     private String FILE_DOMAIN;
+    @Resource
+    private FileService fileService;
 
     @PostMapping("/upload")
     public ResponseDto upload(@RequestParam MultipartFile file) throws IOException {
@@ -31,15 +36,26 @@ public class UploadController {
         LOG.info(file.getOriginalFilename());
         LOG.info(String.valueOf(file.getSize()));
         //保存文件到本地
-        String filename = file.getOriginalFilename();
         String key = UuidUtil.getShortUuid();
-        String fullPath = FILE_PATH+key+"-"+filename;
+        String filename = file.getOriginalFilename();
+        String suffix = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
+        String path = "teacher/" + key + "." + filename;
+        String fullPath = FILE_PATH+path;
         File dest = new File(fullPath);
         file.transferTo(dest);
         LOG.info(dest.getAbsolutePath());
 
+        LOG.info("保存文件记录开始");
+        FileDto fileDto = new FileDto();
+        fileDto.setPath(path);
+        fileDto.setName(filename);
+        fileDto.setSize(Math.toIntExact(file.getSize()));
+        fileDto.setSuffix(suffix);
+        fileDto.setUse("");
+        fileService.save(fileDto);
+
         ResponseDto responseDto = new ResponseDto();
-        responseDto.setContent(FILE_DOMAIN+"f/teacher/"+key+"-"+filename);
+        responseDto.setContent(FILE_DOMAIN+path);
         return responseDto;
     }
 

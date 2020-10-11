@@ -146,7 +146,7 @@
   import Pagination from "../../components/pagination";
   export default {
     components: {Pagination},
-    name: "business-file",
+    name: "file-file",
     data: function() {
       return {
         file: {},
@@ -159,7 +159,7 @@
       _this.$refs.pagination.size = 5;
       _this.list(1);
       // sidebar激活样式方法一
-      // this.$parent.activeSidebar("business-file-sidebar");
+      // this.$parent.activeSidebar("file-file-sidebar");
 
     },
     methods: {
