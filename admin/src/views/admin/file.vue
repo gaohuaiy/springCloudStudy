@@ -76,7 +76,7 @@
       list(page) {
         let _this = this;
         Loading.show();
-        _this.$axios.post(process.env.VUE_APP_SERVER + '/business/admin/file/list', {
+        _this.$axios.post(process.env.VUE_APP_SERVER + '/file/admin/file/list', {
           page: page,
           size: _this.$refs.pagination.size,
         }).then((response)=>{

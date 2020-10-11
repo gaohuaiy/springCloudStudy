@@ -466,9 +466,9 @@
                         <b class="arrow"></b>
 
                         <ul class="submenu">
-                            <li id="business-file-sidebar">
+                            <li id="file-file-sidebar">
                                 <router-link to="/file/file">
-                                    <i class="menu-icon fa fa-file"></i>
+                                    <i class="menu-icon fa fa-caret-right"></i>
                                     文件管理
                                 </router-link>
 

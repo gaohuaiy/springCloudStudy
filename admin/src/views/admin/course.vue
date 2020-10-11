@@ -54,7 +54,7 @@
               <button v-on:click="toChapter(course)" class="btn btn-xs btn-info">
                 大章
               </button>
-              <button v-on:click="editContent(course)" class="btn btn-xs btn-info">
+              <button v-on:click="toContent(course)" class="btn btn-xs btn-info">
                 内容
               </button>
               <button v-on:click="openSortModal(course)" class="btn btn-xs btn-info">
@@ -88,6 +88,23 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-sm-2 control-label">封面</label>
+                <div class="col-sm-10">
+                  <!--<input v-model="course.image" class="form-control">-->
+                  <file v-bind:use="FILE_USE.TEACHER.key"
+                        v-bind:text="'上传封面'"
+                        v-bind:suffixs="['png','jpeg','jpg']"
+                        v-bind:input-id="'image-upload'"
+                        v-bind:after-upload="afterUpload">
+                  </file>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <img v-bind:src="course.image" class="img-responsive">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
                   <input v-model="course.name" class="form-control">
@@ -111,12 +128,7 @@
                   <input v-model="course.price" class="form-control">
                 </div>
               </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">封面</label>
-                <div class="col-sm-10">
-                  <input v-model="course.image" class="form-control">
-                </div>
-              </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label">级别</label>
                 <div class="col-sm-10">
@@ -171,34 +183,6 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <div id="course-content-model" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">内容编辑</h4>
-          </div>
-          <div class="modal-body">
-            <form class="form-horizontal">
-              <div class="form-group">
-                <div class="col-lg-12">
-                  {{saveContentLabel}}
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-lg-12">
-                  <div id="content"></div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button v-on:click="saveContent()" type="button" class="btn btn-primary">保存</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div>
 
     <div id="course-sort-model" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -235,8 +219,9 @@
 
 <script>
   import Pagination from "../../components/pagination";
+  import File from "../../components/file";
   export default {
-    components: {Pagination},
+    components: {File, Pagination},
     name: "business-course",
     data: function() {
       return {
@@ -254,6 +239,7 @@
           newSort: 0,
         },
         teachers:[],
+        FILE_USE:FILE_USE,
       }
     },
     mounted: function() {
@@ -436,66 +422,6 @@
 
                 })
       },
-      editContent(course){
-        let _this = this;
-        let id = course.id;
-        _this.course = course;
-        $("#content").summernote({
-          focus:true,
-          height: 300
-        });
-        //先清空历史文本
-        $("#content").summernote('code','');
-        _this.saveContentLabel = "";
-        Loading.show();
-        _this.$axios.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-content/'+id, )
-                .then((response)=>{
-                  Loading.hide();
-                  let resp = response.data;
-                  if (resp.success){
-                    $("#course-content-model").modal({backdrop: 'static',keyboard: false}).show();
-                    if (resp.content){
-                      $("#content").summernote('code',resp.content.content);
-                    }
-
-                    //定时任务
-                    let saveContentInterval = setInterval(function () {
-                      _this.saveContent();
-                    },5000);
-                    //关闭窗口时，清除自动保存任务
-                    $('#course-content-model').on('hidden.bs.modal',function (e) {
-                        clearInterval(saveContentInterval);
-                    })
-                  }else {
-                    Toast.warning(resp.msg);
-                  }
-
-                })
-
-      },saveContent(){
-        let _this = this;
-        let content = $("#content").summernote("code");
-        Loading.show();
-        _this.$axios.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-content',{
-          id: _this.course.id,
-          content: content
-        } ).then(
-                (response)=>{
-                  Loading.hide();
-                  let resp = response.data;
-                  if (resp.success){
-                    //$("#course-content-model").modal("hide");
-                    //Toast.success("保存成功！");
-                    let now = Tool.dateFormat("yy/MM/dd hh:mm:ss");
-                    _this.saveContentLabel = "最后保存时间："+now;
-
-                  }else {
-                    Toast.warning(resp.msg);
-                  }
-
-                })
-
-      },
       openSortModal(course){
         let _this = this;
         _this.sort = {
@@ -527,7 +453,19 @@
 
                 })
         
+      },
+      afterUpload(resp){
+        let _this = this;
+        let image = resp.content.path;
+        _this.course.image = image;
+
+
+      },toContent(course){
+        let _this = this;
+        SessionStorage.set(SESSION_KEY_COURSE,course);
+        _this.$router.push("/business/content");
       }
+
     }
   }
 </script>

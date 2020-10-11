@@ -4,6 +4,7 @@ import Login from "./views/login.vue"
 import Admin from "./views/admin.vue"
 import Welcome from "./views/admin/welcome.vue"
 import Section from "./views/admin/section.vue"
+import Content from "./views/admin/content.vue"
 import Course from "./views/admin/course.vue"
 import Chapter from "./views/admin/chapter.vue"
 import Category from "./views/admin/category.vue"
@@ -42,13 +43,17 @@ export default new Router({
             name: "business/course",
             component: Course,
         },{
-            path: "/business/category",
-            name: "/business/category",
+            path: "business/category",
+            name: "business/category",
             component: Category,
         },{
-            path: "/business/teacher",
-            name: "/business/teacher",
+            path: "business/teacher",
+            name: "business/teacher",
             component: Teacher,
+        },{
+            path: "business/content",
+            name: "business/content",
+            component: Content,
         },{
             path: "file/file",
             name: "file/file",
