@@ -270,8 +270,11 @@
             getTime(){
                 let _this = this;
                 let video = _this.$refs.video;
-                _this.section.time = parseInt(video.duration,10);
-                console.log("时长："+parseInt(video.duration,10))
+                setTimeout(function () {
+                    _this.section.time = parseInt(video.duration,10);
+                    console.log("时长："+parseInt(video.duration,10));
+                },1000);
+
             }
         }
     }

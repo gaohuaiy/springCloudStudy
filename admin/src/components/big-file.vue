@@ -68,14 +68,17 @@
           //文件分片
           let shardSize  = 20*1024*1024; //以20MB为一个分片
           let shardIndex = 1;//分片索引
-          let start = shardIndex*shardSize;//当前分片起始位置
+          let start = (shardIndex - 1)*shardSize;//当前分片起始位置
           let end = Math.min(file.size,start+shardSize);//当前分片结束位置
           let fileShard = file.slice(start,end);//从文件中截取当前的分片数据
           let size = file.size;
           let shardTotal = Math.ceil(size/shardSize);
-          let key = hex_md5(file);
-          let key10 = parseInt(key);
-          let key62 = Tool._10to62(key10)//节约空姐
+          let key = hex_md5(file.name,file.size,file.type);
+          console.log("key:"+key)
+          let key10 = parseInt(key,16);
+          console.log("key10"+key10)
+          let key62 = Tool._10to62(key10);//节约空姐
+          console.log(key62)
           formData.append('shard',fileShard);
           formData.append('shardIndex',shardIndex);
           formData.append('shardSize',shardSize);
